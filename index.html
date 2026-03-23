@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTA Vault — GTA Boosting Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0a0c; --surface:#111116; --surface2:#17171f; --border:#2a2a38;
+    --accent:#ff3c3c; --accent2:#ff8c00; --gold:#f5c842;
+    --text:#e8e8f0; --muted:#6b6b80; --green:#2dff7a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.35;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(10,10,12,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+  .logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--text);display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+  .logo span{color:var(--accent)}
+  .logo-icon{width:34px;height:34px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-family:'Bebas Neue',sans-serif;color:white;letter-spacing:0}
+  .nav-links{display:flex;gap:4px;list-style:none}
+  .nav-links a{color:var(--muted);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:4px;transition:color 0.2s,background 0.2s;cursor:pointer}
+  .nav-links a:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+  .nav-links a.active{color:var(--text);background:rgba(255,60,60,0.12)}
+  .nav-right{display:flex;align-items:center;gap:12px}
+  .cart-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:8px;transition:border-color 0.2s}
+  .cart-btn:hover{border-color:var(--accent)}
+  .cart-count{background:var(--accent);color:white;min-width:18px;height:18px;border-radius:9px;padding:0 5px;font-size:10px;display:flex;align-items:center;justify-content:center;transition:transform 0.15s}
+  .cart-count.bump{transform:scale(1.5)}
+  .nav-cta{background:var(--accent);color:white;padding:9px 22px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:background 0.2s;cursor:pointer;border:none}
+  .nav-cta:hover{background:#e02020}
+
+  /* ANNOUNCEMENT */
+  .announcement{background:var(--accent);padding:8px 20px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+
+  /* PAGES */
+  .page{display:none}
+  .page.active{display:block}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;position:relative;padding:120px 40px 80px;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 50%,rgba(255,60,60,0.08) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 20% 80%,rgba(255,140,0,0.05) 0%,transparent 60%),linear-gradient(180deg,#0a0a0c 0%,#0f0f14 100%)}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,60,60,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,60,60,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%)}
+  .hero-content{position:relative;max-width:700px}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.3);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:28px}
+  .hero-badge::before{content:'';width:7px;height:7px;background:var(--accent);border-radius:50%;animation:pulse 1.8s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,8vw,96px);line-height:0.95;letter-spacing:2px;margin-bottom:24px}
+  .hero h1 .line2{color:var(--accent);display:block}
+  .hero p{font-size:17px;color:var(--muted);line-height:1.7;max-width:480px;margin-bottom:40px;font-weight:300}
+  .hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+  .btn-primary{background:var(--accent);color:white;padding:14px 32px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(255,60,60,0.35)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,60,60,0.5)}
+  .btn-ghost{background:transparent;color:var(--text);padding:14px 32px;border-radius:4px;border:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:border-color 0.2s}
+  .btn-ghost:hover{border-color:var(--text)}
+  .hero-stats{display:flex;gap:48px;margin-top:64px;padding-top:40px;border-top:1px solid var(--border)}
+  .stat-num{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px}
+  .stat-num span{color:var(--accent)}
+  .stat-label{font-size:12px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  .hero-content>*{animation:fadeUp 0.6s ease forwards;opacity:0}
+  .hero-badge{animation-delay:0.1s}.hero h1{animation-delay:0.2s}.hero p{animation-delay:0.3s}.hero-btns{animation-delay:0.4s}.hero-stats{animation-delay:0.5s}
+
+  /* TRUST */
+  .trust-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:32px 40px}
+  .trust-inner{display:flex;justify-content:space-around;flex-wrap:wrap;gap:24px}
+  .trust-item{display:flex;align-items:center;gap:14px}
+  .trust-icon{width:44px;height:44px;background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .trust-text strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.5px}
+  .trust-text span{font-size:12px;color:var(--muted)}
+
+  /* SECTIONS */
+  section{padding:80px 40px}
+  .section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,48px);letter-spacing:1px;line-height:1}
+
+  /* CATEGORY TABS */
+  .cat-tabs{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:40px}
+  .cat-tab{flex:1;padding:20px 24px;cursor:pointer;background:var(--surface);border-right:1px solid var(--border);transition:background 0.2s;display:flex;align-items:center;gap:12px}
+  .cat-tab:last-child{border-right:none}
+  .cat-tab:hover{background:var(--surface2)}
+  .cat-tab.active{background:rgba(255,60,60,0.1);border-bottom:2px solid var(--accent)}
+  .cat-tab-icon{font-size:22px}
+  .cat-tab-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700}
+  .cat-tab-count{font-size:11px;color:var(--muted);margin-top:2px}
+
+  /* PRODUCTS */
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+  .product-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:transform 0.25s,border-color 0.25s}
+  .product-card:hover{transform:translateY(-4px);border-color:rgba(255,60,60,0.35)}
+  .product-card.hidden{display:none}
+  .product-img{height:160px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .product-img-bg{position:absolute;inset:0}
+  .img-boost{background:linear-gradient(135deg,#001220 0%,#003355 40%,#001220 100%)}
+  .img-account{background:linear-gradient(135deg,#001a0a 0%,#003322 40%,#001a0a 100%)}
+  .img-deluxo{background:linear-gradient(135deg,#1a1200 0%,#3d2d00 40%,#1a1200 100%)}
+  .product-img-icon{position:relative;font-size:52px;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.8))}
+  .product-badge{position:absolute;top:12px;left:12px;padding:3px 10px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+  .badge-hot{background:var(--accent);color:white}.badge-sale{background:var(--accent2);color:white}.badge-new{background:var(--green);color:#000}.badge-popular{background:var(--gold);color:#000}
+  .product-body{padding:20px}
+  .product-platform{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .product-name{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;margin-bottom:8px;line-height:1.2}
+  .product-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px}
+  .product-footer{display:flex;align-items:center;justify-content:space-between}
+  .product-price{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px}
+  .product-price .old{font-size:14px;color:var(--muted);text-decoration:line-through;margin-right:4px;font-family:'Barlow',sans-serif}
+  .product-price .currency{font-size:16px;color:var(--muted)}
+  .add-btn{background:var(--accent);color:white;border:none;padding:8px 18px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background 0.2s,transform 0.15s}
+  .add-btn:hover{background:#e02020;transform:scale(1.04)}
+  .add-btn.added{background:var(--green);color:#000}
+
+  /* DEAL BANNER */
+  .deal-banner{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 380px;position:relative}
+  .deal-content{padding:52px}
+  .deal-tag{display:inline-block;background:var(--gold);color:#000;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:3px;margin-bottom:20px}
+  .deal-content h2{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:1px;line-height:1;margin-bottom:14px}
+  .deal-content h2 span{color:var(--accent)}
+  .deal-content p{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:32px;max-width:440px}
+  .deal-price-row{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
+  .deal-price{font-family:'Bebas Neue',sans-serif;font-size:56px;color:var(--text);letter-spacing:1px}
+  .deal-price .currency-sym{font-size:28px;color:var(--muted)}
+  .deal-original{font-size:22px;color:var(--muted);text-decoration:line-through}
+  .deal-save{background:rgba(255,60,60,0.15);border:1px solid rgba(255,60,60,0.3);color:var(--accent);font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:3px}
+  .deal-visual{background:linear-gradient(135deg,#1a0800 0%,#3d1500 50%,#1a0500 100%);display:flex;align-items:center;justify-content:center;font-size:100px;position:relative;overflow:hidden}
+  .deal-visual::before{content:'GTA V';position:absolute;font-family:'Bebas Neue',sans-serif;font-size:120px;color:rgba(255,255,255,0.03);letter-spacing:8px;white-space:nowrap}
+
+  /* REVIEWS */
+  .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .review-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px}
+  .stars{color:var(--gold);font-size:14px;margin-bottom:14px}
+  .review-text{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:20px;font-style:italic}
+  .reviewer{display:flex;align-items:center;gap:12px}
+  .reviewer-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:'Barlow Condensed',sans-serif}
+  .av1{background:rgba(255,60,60,0.2);color:var(--accent)}.av2{background:rgba(255,140,0,0.2);color:var(--accent2)}.av3{background:rgba(45,255,122,0.2);color:var(--green)}
+  .reviewer-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700}
+  .reviewer-since{font-size:12px;color:var(--muted)}
+
+  /* HOW IT WORKS */
+  .steps{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+  .step-num{font-family:'Bebas Neue',sans-serif;font-size:72px;color:rgba(255,60,60,0.08);line-height:1;margin-bottom:-16px}
+  .step-icon{width:52px;height:52px;background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.25);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+  .step-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px}
+  .step-desc{font-size:13px;color:var(--muted);line-height:1.6}
+
+  /* FOOTER */
+  footer{background:var(--surface);border-top:1px solid var(--border);padding:60px 40px 32px}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:52px}
+  .footer-brand p{font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px;max-width:280px}
+  .footer-col h4{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .footer-col ul{list-style:none}.footer-col li{margin-bottom:10px}
+  .footer-col a{color:var(--text);text-decoration:none;font-size:14px;opacity:0.7;transition:opacity 0.2s;cursor:pointer}
+  .footer-col a:hover{opacity:1}
+  .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid var(--border);font-size:13px;color:var(--muted)}
+  .footer-disclaimer{font-size:11px;color:rgba(107,107,128,0.6);max-width:500px;line-height:1.5;margin-top:6px}
+
+  /* CART DRAWER */
+  .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;opacity:0;pointer-events:none;transition:opacity 0.3s}
+  .cart-overlay.open{opacity:1;pointer-events:all}
+  .cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--surface);border-left:1px solid var(--border);z-index:601;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column}
+  .cart-drawer.open{transform:translateX(0)}
+  .cart-header{padding:24px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .cart-header-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px}
+  .cart-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+  .cart-close:hover{color:var(--text)}
+  .cart-items{flex:1;overflow-y:auto;padding:20px 28px}
+  .cart-empty{text-align:center;padding:60px 0;color:var(--muted)}
+  .cart-empty-icon{font-size:48px;margin-bottom:16px}
+  .cart-empty p{font-size:14px;line-height:1.6}
+  .cart-item{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);animation:fadeUp 0.25s ease}
+  .cart-item-icon{width:52px;height:52px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+  .cart-item-info{flex:1}
+  .cart-item-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px}
+  .cart-item-price{font-size:13px;color:var(--accent);font-weight:600}
+  .cart-item-remove{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;transition:color 0.2s}
+  .cart-item-remove:hover{color:var(--accent)}
+  .cart-footer{padding:24px 28px;border-top:1px solid var(--border)}
+  .cart-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px}
+  .cart-total-label{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+  .cart-total-price{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px}
+  .cart-checkout-btn{width:100%;background:#0070ba;color:white;border:none;padding:16px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;justify-content:center;gap:10px}
+  .cart-checkout-btn:hover{background:#005ea6}
+  .cart-checkout-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
+
+  /* CHECKOUT MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center}
+  .modal-overlay.open{display:flex}
+  .modal-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:100%;max-width:480px;margin:20px;overflow:hidden;animation:fadeUp 0.3s ease}
+  .modal-head{background:var(--surface2);padding:24px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .modal-head-sub{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .modal-head-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
+  .modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+  .modal-close:hover{color:var(--text)}
+  .modal-body{padding:28px}
+  .form-group{margin-bottom:16px}
+  .form-label{display:block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .form-input{width:100%;background:#0a0a0c;border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+  .form-input:focus{border-color:var(--accent)}
+  .form-hint{font-size:11px;color:var(--muted);margin-top:6px}
+  .form-error{display:none;background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.3);border-radius:6px;padding:10px 14px;font-size:13px;color:var(--accent);margin-bottom:16px}
+  .order-summary{background:#0a0a0c;border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}
+  .order-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .order-row span:last-child{color:var(--text);font-weight:600}
+  .order-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+  .order-total span:first-child{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+  .order-total span:last-child{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px}
+  .paypal-btn{width:100%;background:#0070ba;color:white;border:none;padding:14px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;justify-content:center;gap:10px}
+  .paypal-btn:hover{background:#005ea6}
+  .modal-note{text-align:center;font-size:11px;color:var(--muted);margin-top:12px}
+  .confirm-screen{padding:36px 28px;text-align:center}
+  .confirm-icon{font-size:56px;margin-bottom:16px}
+  .confirm-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin-bottom:12px}
+  .confirm-text{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+  .confirm-details{background:#0a0a0c;border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:24px;text-align:left}
+  .confirm-details-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .confirm-row{font-size:13px;color:var(--text);margin-bottom:6px}
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    nav{padding:0 16px}
+    .nav-links{display:none}
+    .deal-banner{grid-template-columns:1fr}
+    .deal-visual{height:160px}
+    .reviews-grid{grid-template-columns:1fr}
+    .steps-grid{grid-template-columns:repeat(2,1fr)}
+    .footer-grid{grid-template-columns:1fr 1fr}
+    section{padding:60px 20px}
+    .hero{padding:100px 20px 60px}
+    .trust-bar{padding:24px 20px}
+    .cat-tabs{flex-direction:column}
+    .cat-tab{border-right:none;border-bottom:1px solid var(--border)}
+    .cart-drawer{width:100vw}
+  }
+</style>
+</head>
+<body>
+
+<div class="announcement">⚡ Flash Sale — Up to 40% off Boosting Services · PayPal Payments Only</div>
+
+<nav>
+  <a class="logo" onclick="showPage('home')">
+    <div class="logo-icon">GV</div>GTA <span>VAULT</span>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" data-page="home">Home</a></li>
+    <li><a onclick="showPage('services','all')" data-page="services">All Services</a></li>
+    <li><a onclick="showPage('services','rank')" data-page="rank">Rank Boosting</a></li>
+    <li><a onclick="showPage('services','account')" data-page="account">Account Boosting</a></li>
+    <li><a onclick="showPage('services','deluxo')" data-page="deluxo">Deluxo Farm</a></li>
+    <li><a onclick="showPage('howitworks')" data-page="howitworks">How It Works</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="toggleCart()">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+    <button class="nav-cta" onclick="showPage('services','all')">Get Boosted</button>
+  </div>
+</nav>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="page active" id="page-home">
+
+  <section class="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">GTA Online Boosting</div>
+      <h1>WE BOOST<br><span class="line2">YOUR ACCOUNT</span></h1>
+      <p>Professional GTA V boosting services on PC — Rank Boosting, Business Unlocks, CEO Setups, and Deluxo Farming. We handle the grind so you don't have to.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('services','all')">View Services</button>
+        <button class="btn-ghost" onclick="showPage('howitworks')">How It Works</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">12k<span>+</span></div><div class="stat-label">Orders Delivered</div></div>
+        <div><div class="stat-num">4.9<span>★</span></div><div class="stat-label">Average Rating</div></div>
+        <div><div class="stat-num">6<span>hr</span></div><div class="stat-label">Avg Delivery</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item"><div class="trust-icon">⚡</div><div class="trust-text"><strong>Fast Delivery</strong><span>Most boosts done same day</span></div></div>
+      <div class="trust-item"><div class="trust-icon">🔒</div><div class="trust-text"><strong>PayPal Payments</strong><span>Buyer protection included</span></div></div>
+      <div class="trust-item" style="cursor:pointer;" onclick="window.open('https://discord.gg/4MB7R5BQUT','_blank')"><div class="trust-icon">💬</div><div class="trust-text"><strong>Discord Support</strong><span>We DM you to get started</span></div></div>
+      <div class="trust-item"><div class="trust-icon">✅</div><div class="trust-text"><strong>Safe Boosting</strong><span>Professional trusted boosters</span></div></div>
+      <div class="trust-item"><div class="trust-icon">🔄</div><div class="trust-text"><strong>Refund Policy</strong><span>Contact us to discuss</span></div></div>
+    </div>
+  </div>
+
+  <section style="padding:80px 40px">
+    <div class="deal-banner">
+      <div class="deal-content">
+        <div class="deal-tag">⚡ Deal of the Week</div>
+        <h2>FULL BUSINESS <span>BOOST</span></h2>
+        <p>We log into your account and unlock every business — Bunker, Nightclub, MC Clubhouse, CEO Office, and more. Fully set up and ready to earn millions per hour.</p>
+        <div class="deal-price-row">
+          <div class="deal-price"><span class="currency-sym">$</span>34<span style="font-size:28px;color:var(--muted)">.99</span></div>
+          <div class="deal-original">$49.99</div>
+          <div class="deal-save">SAVE 30%</div>
+        </div>
+        <button class="btn-primary" onclick="addToCart('Full Business Boost','🏢','34.99');toggleCart()">Add to Cart</button>
+      </div>
+      <div class="deal-visual">🏢</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-header"><div><div class="section-label">Testimonials</div><div class="section-title">What Players Say</div></div></div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <div class="review-text">"Ordered the rank boost to 500 and it was done overnight. They kept me updated the whole time. Account came back perfectly untouched."</div>
+        <div class="reviewer"><div class="reviewer-avatar av1">JK</div><div><div class="reviewer-name">JKillz99</div><div class="reviewer-since">Customer since 2024</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <div class="review-text">"Got the full business boost — bunker, nightclub, CEO all set up. Saved me weeks of grinding. Done in less than 24 hours. Insane service."</div>
+        <div class="reviewer"><div class="reviewer-avatar av2">XT</div><div><div class="reviewer-name">XtremeTaz</div><div class="reviewer-since">Customer since 2023</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★☆</div>
+        <div class="review-text">"CEO setup boost was exactly what I needed. They set everything up on my own account. Support replied fast whenever I had questions."</div>
+        <div class="reviewer"><div class="reviewer-avatar av3">NL</div><div><div class="reviewer-name">NightLobby</div><div class="reviewer-since">Customer since 2025</div></div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══════════ SERVICES ══════════ -->
+<div class="page" id="page-services">
+  <section>
+    <div class="section-header"><div><div class="section-label">Services</div><div class="section-title">Our Boosting Services</div></div></div>
+    <div class="cat-tabs">
+      <div class="cat-tab active" id="tab-all" onclick="filterCat('all')"><span class="cat-tab-icon">🎮</span><div><div class="cat-tab-name">All Services</div><div class="cat-tab-count">7 services</div></div></div>
+      <div class="cat-tab" id="tab-rank" onclick="filterCat('rank')"><span class="cat-tab-icon">🚀</span><div><div class="cat-tab-name">Rank Boosting</div><div class="cat-tab-count">2 services</div></div></div>
+      <div class="cat-tab" id="tab-account" onclick="filterCat('account')"><span class="cat-tab-icon">🏢</span><div><div class="cat-tab-name">Account Boosting</div><div class="cat-tab-count">2 services</div></div></div>
+      <div class="cat-tab" id="tab-deluxo" onclick="filterCat('deluxo')"><span class="cat-tab-icon">🚗</span><div><div class="cat-tab-name">Deluxo Farm</div><div class="cat-tab-count">3 services</div></div></div>
+    </div>
+    <div class="products-grid" id="productsGrid">
+
+      <div class="product-card" data-cat="rank">
+        <div class="product-img"><div class="product-img-bg img-boost"></div><div class="product-img-icon">🚀</div><span class="product-badge badge-sale">SALE</span></div>
+        <div class="product-body">
+          <div class="product-platform">PC Only · ⏱ 6–12 Hours</div>
+          <div class="product-name">Rank Boost — 1 → 100</div>
+          <div class="product-desc">We log into your account and boost you to rank 100. Delivered in under 12 hours.</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="old">$14.99</span><span class="currency">$</span>9.99</div>
+            <button class="add-btn" onclick="addToCart('Rank Boost — 1 → 100','🚀','9.99',this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="rank">
+        <div class="product-img"><div class="product-img-bg img-boost"></div><div class="product-img-icon">⚡</div><span class="product-badge badge-hot">HOT</span></div>
+        <div class="product-body">
+          <div class="product-platform">PC Only · ⏱ 24–48 Hours</div>
+          <div class="product-name">Rank Boost — 100 → 500</div>
+          <div class="product-desc">Our professional boosters take your account to rank 500. Completed in 24–48 hrs.</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="currency">$</span>24.99</div>
+            <button class="add-btn" onclick="addToCart('Rank Boost — 100 → 500','⚡','24.99',this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="account">
+        <div class="product-img"><div class="product-img-bg img-account"></div><div class="product-img-icon">💼</div><span class="product-badge badge-popular">POPULAR</span></div>
+        <div class="product-body">
+          <div class="product-platform">PC Only · ⏱ 12–24 Hours</div>
+          <div class="product-name">CEO Setup Boost</div>
+          <div class="product-desc">We boost your account to rank 200 and set up your CEO office + warehouse — ready to grind.</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="currency">$</span>19.99</div>
+            <button class="add-btn" onclick="addToCart('CEO Setup Boost','💼','19.99',this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="account">
+        <div class="product-img"><div class="product-img-bg img-account"></div><div class="product-img-icon">🏢</div><span class="product-badge badge-new">NEW</span></div>
+        <div class="product-body">
+          <div class="product-platform">PC Only · ⏱ 1–2 Days</div>
+          <div class="product-name">Full Business Boost</div>
+          <div class="product-desc">We unlock all businesses on your account — bunker, nightclub, MC, CEO, and more.</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="old">$49.99</span><span class="currency">$</span>34.99</div>
+            <button class="add-btn" onclick="addToCart('Full Business Boost','🏢','34.99',this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="deluxo">
+        <div class="product-img"><div class="product-img-bg img-deluxo"></div><div class="product-img-icon">🚗</div><span class="product-badge badge-hot">HOT</span></div>
+        <div class="product-body">
+          <div class="product-platform">PC Only · ⏱ 2–3 Days</div>
+          <div class="product-name">Deluxo Farm — $50M Worth</div>
+          <div class="product-desc">We grind Deluxo sell missions on your account until you've earned $50M worth of Deluxos delivered.</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="currency">$</span>14.99</div>
+            <button class="add-btn" onclick="addToCart('Deluxo Farm — $50M Worth','🚗','14.99',this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="deluxo">
+        <div class="product-img"><div class="product-img-bg img-deluxo"></div><div class="product-img-icon">💸</div><span class="product-badge badge-popular">POPULAR</span></div>
+        <div class="product-body">
+          <div class="product-platform">PC Only · ⏱ 5–7 Days</div>
+          <div class="product-name">Deluxo Farm — $200M Worth</div>
+          <div class="product-desc">Our boosters run Deluxo sell missions on your account until $200M worth of Deluxos have been completed.</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="old">$44.99</span><span class="currency">$</span>34.99</div>
+            <button class="add-btn" onclick="addToCart('Deluxo Farm — $200M Worth','💸','34.99',this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="deluxo">
+        <div class="product-img"><div class="product-img-bg img-account"></div><div class="product-img-icon">🏆</div><span class="product-badge badge-sale">SALE</span></div>
+        <div class="product-body">
+          <div class="product-platform">PC Only · ⏱ 3–5 Days</div>
+          <div class="product-name">Full Setup + $100M Deluxo Farm</div>
+          <div class="product-desc">Best value bundle — we set up all your businesses AND run Deluxo sell missions until $100M worth is earned.</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="old">$69.99</span><span class="currency">$</span>49.99</div>
+            <button class="add-btn" onclick="addToCart('Full Setup + $100M Deluxo Farm','🏆','49.99',this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════════ HOW IT WORKS ══════════ -->
+<div class="page" id="page-howitworks">
+  <section class="steps">
+    <div class="section-header"><div><div class="section-label">Process</div><div class="section-title">How It Works</div></div></div>
+    <div class="steps-grid">
+      <div><div class="step-num">01</div><div class="step-icon">🛒</div><div class="step-title">Choose Your Boost</div><div class="step-desc">Browse our services, add what you want to your cart, then proceed to checkout.</div></div>
+      <div><div class="step-num">02</div><div class="step-icon">💳</div><div class="step-title">Pay via PayPal</div><div class="step-desc">Pay securely via PayPal. You're covered by PayPal buyer protection on every order.</div></div>
+      <div><div class="step-num">03</div><div class="step-icon">🔑</div><div class="step-title">We DM You on Discord</div><div class="step-desc">After payment we DM you on Discord to securely arrange account access. Set a temp password — we never store credentials.</div></div>
+      <div><div class="step-num">04</div><div class="step-icon">✅</div><div class="step-title">Boost Complete</div><div class="step-desc">We finish the boost, notify you on Discord, and you change your password back. Log in and enjoy.</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo" onclick="showPage('home')" style="cursor:pointer"><div class="logo-icon">GV</div>GTA <span>VAULT</span></div>
+      <p>Your trusted GTA V PC boosting service. We boost your account — rank, businesses, CEO setups, and Deluxo farming. Trusted by thousands of players.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a onclick="showPage('services','rank')">Rank Boosting</a></li>
+        <li><a onclick="showPage('services','account')">CEO Setup Boost</a></li>
+        <li><a onclick="showPage('services','account')">Full Business Boost</a></li>
+        <li><a onclick="showPage('services','deluxo')">Deluxo Money Farm</a></li>
+        <li><a onclick="showPage('services','deluxo')">Full Setup Bundle</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a onclick="showPage('howitworks')">How It Works</a></li>
+        <li><a onclick="showPage('home')">Reviews</a></li>
+        <li><a href="https://discord.gg/4MB7R5BQUT" target="_blank">Discord Support</a></li>
+        <li><a>Refund Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a onclick="showPage('terms')">Terms of Service</a></li>
+        <li><a onclick="showPage('privacy')">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>
+      <div>© 2026 GTA Vault. All rights reserved.</div>
+      <div class="footer-disclaimer">GTA Vault is not affiliated with Rockstar Games or Take-Two Interactive. Grand Theft Auto is a registered trademark of Take-Two Interactive.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════ TERMS OF SERVICE ══════════ -->
+<div class="page" id="page-terms">
+  <section style="max-width:800px;margin:0 auto;padding:100px 40px 80px;">
+    <button onclick="showPage('home')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:8px 18px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:40px;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='var(--text)';this.style.borderColor='var(--text)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">← Back to Home</button>
+    <div class="section-label">Legal</div>
+    <div class="section-title" style="margin-bottom:8px;">Terms of Service</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:48px;">Last updated: January 2026</p>
+
+    <div style="display:flex;flex-direction:column;gap:36px;">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">1. Acceptance of Terms</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">By placing an order with GTA Vault, you confirm that you have read, understood, and agree to be bound by these Terms of Service in full. If you do not agree to these terms, you must not use our services. These terms apply to all services offered on this website including rank boosting, account boosting, CEO setup services, and Deluxo farming.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">2. PC Only — Platform Restriction</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">All GTA Vault boosting services are exclusively available for <strong style="color:var(--text)">GTA V on PC</strong>. We do not offer services for PlayStation 4, PlayStation 5, Xbox One, or Xbox Series X/S. Orders placed by customers who are not on PC will not be eligible for a refund, as platform is confirmed during the checkout process.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">3. Account Responsibility & Liability Disclaimer</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">By submitting your order and providing account access to GTA Vault, you acknowledge and agree to the following:</p>
+        <ul style="font-size:14px;color:var(--muted);line-height:1.8;margin-top:12px;padding-left:20px;display:flex;flex-direction:column;gap:10px;">
+          <li>GTA Vault will access your Rockstar account solely for the purpose of completing the purchased service.</li>
+          <li><strong style="color:var(--text)">Once the boost is completed and your account is returned to you, GTA Vault accepts no responsibility or liability for any issues that occur to your account thereafter.</strong></li>
+          <li>This includes but is not limited to: account bans, suspensions, moderation actions by Rockstar Games, loss of in-game progress, items, currency, or any other game-related consequences.</li>
+          <li>We strongly recommend that you change your password immediately once your account is returned to you.</li>
+          <li>GTA Vault is not affiliated with Rockstar Games or Take-Two Interactive. Any actions taken by Rockstar against your account are outside of our control.</li>
+          <li>You use our services at your own risk and accept full responsibility for any consequences resulting from the use of third-party boosting services on your account.</li>
+        </ul>
+        <div style="margin-top:16px;background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.25);border-radius:6px;padding:12px 16px;font-size:13px;color:var(--muted);line-height:1.6;">
+          If you experience any issues after your account has been returned, please contact us via Discord or the contact details provided. While we are not liable for post-service account issues, we are happy to discuss the matter and assist where reasonably possible.
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">4. Payments</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">All payments are processed through PayPal. By completing a payment you agree to PayPal's terms and conditions. GTA Vault only accepts PayPal as a payment method. Prices are listed in USD. Once payment is confirmed, the service will be initiated and you will be contacted via Discord within 1 hour.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">5. Refunds</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">We do not have a fixed refund policy. If you are unhappy with your order or have a concern regarding your purchase, please contact us directly via Discord and we will discuss the matter with you. All refund requests are handled on a case-by-case basis. We do not offer refunds for account bans or actions taken by Rockstar Games during or after the boosting process.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">6. Account Access & Security</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">You are responsible for providing accurate account credentials to complete the boost. We recommend setting a temporary password before sharing access and changing it back immediately after the service is complete. GTA Vault will never ask for your email address, phone number, two-factor authentication codes, or any personal information beyond what is needed to access your GTA account.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">7. Contact Us</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">If you have any questions, concerns, or issues regarding your order or these terms, please contact us via Discord. We aim to respond to all enquiries within a few hours. Our team is here to help and will do their best to resolve any matter raised.</p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════════ PRIVACY POLICY ══════════ -->
+<div class="page" id="page-privacy">
+  <section style="max-width:800px;margin:0 auto;padding:100px 40px 80px;">
+    <button onclick="showPage('home')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:8px 18px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:40px;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='var(--text)';this.style.borderColor='var(--text)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">← Back to Home</button>
+    <div class="section-label">Legal</div>
+    <div class="section-title" style="margin-bottom:8px;">Privacy Policy</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:48px;">Last updated: January 2026</p>
+
+    <div style="display:flex;flex-direction:column;gap:36px;">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">1. Who We Are</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">GTA Vault is a GTA V PC boosting service. This Privacy Policy explains what information we collect from you when you use our website and services, how we use it, and how we protect it. We take your privacy seriously and are committed to handling your information responsibly.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">2. Information We Collect</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">When you place an order, we collect the following information:</p>
+        <ul style="font-size:14px;color:var(--muted);line-height:1.8;margin-top:12px;padding-left:20px;display:flex;flex-direction:column;gap:8px;">
+          <li><strong style="color:var(--text)">Rockstar Username</strong> — used solely to identify and access your GTA account for the duration of the boost.</li>
+          <li><strong style="color:var(--text)">Discord Username</strong> — used to contact you about your order and to arrange account access securely.</li>
+          <li><strong style="color:var(--text)">Payment information</strong> — handled entirely by PayPal. GTA Vault never sees, stores, or processes your card or bank details.</li>
+        </ul>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-top:14px;">We do not collect your email address, phone number, date of birth, or any other personal identifying information beyond what is listed above.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">3. How We Use Your Information</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">The information you provide is used exclusively to fulfil your order. Specifically:</p>
+        <ul style="font-size:14px;color:var(--muted);line-height:1.8;margin-top:12px;padding-left:20px;display:flex;flex-direction:column;gap:8px;">
+          <li>Your Rockstar username is used to access your account and complete the requested boosting service.</li>
+          <li>Your Discord username is used to communicate order updates and arrange secure account handover.</li>
+          <li>We do not use your information for marketing, advertising, or any purpose unrelated to your order.</li>
+          <li>We do not sell, share, or transfer your information to any third parties.</li>
+        </ul>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">4. Data Retention</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">We retain order information only for as long as necessary to complete and support your service. Once your boost is complete and any post-service queries are resolved, your data is deleted. We do not maintain long-term databases of customer account credentials.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">5. Account Security</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">We strongly recommend the following steps to protect your account:</p>
+        <ul style="font-size:14px;color:var(--muted);line-height:1.8;margin-top:12px;padding-left:20px;display:flex;flex-direction:column;gap:8px;">
+          <li>Set a <strong style="color:var(--text)">temporary password</strong> before sharing your account with us.</li>
+          <li><strong style="color:var(--text)">Change your password immediately</strong> once your boost is complete and your account is returned.</li>
+          <li>Never share your email login, 2FA codes, or recovery information with anyone.</li>
+        </ul>
+        <div style="margin-top:16px;background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.25);border-radius:6px;padding:12px 16px;font-size:13px;color:var(--muted);line-height:1.6;">
+          GTA Vault will never ask for your email address, two-factor authentication codes, or account recovery details. If anyone claiming to be GTA Vault asks for these, do not provide them.
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">6. Third-Party Services</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">Payments are processed by PayPal. GTA Vault has no access to your payment details. PayPal's own privacy policy governs how your payment data is handled. We encourage you to review PayPal's privacy policy at paypal.com. This website uses Google Fonts for typography, which may load resources from Google's servers.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">7. Your Rights</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">You have the right to request deletion of any data we hold about you. To make such a request, contact us via Discord and we will action it promptly. As we collect minimal data and do not retain it long-term, most data will already be deleted by the time of your request.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--text);">8. Contact Us</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;">If you have any questions about this Privacy Policy or how your data is handled, please reach out to us on Discord. We are happy to clarify anything and will respond as quickly as possible.</p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════════ CART DRAWER ══════════ -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div class="cart-header-title">Your Cart</div>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">🛒</div>
+      <p>Your cart is empty.<br>Browse our services and add a boost to get started.</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-price" id="cartTotal">$0.00</span>
+    </div>
+    <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="openCheckout()" disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/></svg>
+      Checkout with PayPal
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ CHECKOUT MODAL ══════════ -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><div class="modal-head-sub">Checkout</div><div class="modal-head-title" id="modalTitle">Complete Your Order</div></div>
+      <button class="modal-close" onclick="closeCheckout()">✕</button>
+    </div>
+    <div id="checkoutStep1">
+      <div class="modal-body">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Fill in your details below. After submitting, your PayPal tab will open to complete payment. We'll then DM you on Discord to get your boost started.</p>
+
+        <div style="background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.4);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;">
+          <span style="font-size:20px;flex-shrink:0;">⚠️</span>
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.5px;color:#ff8c00;margin-bottom:4px;">PC ONLY — PLEASE READ BEFORE ORDERING</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6;">Our boosting services are exclusively for <strong style="color:var(--text)">GTA V on PC</strong>. We do not support PlayStation or Xbox. If you are not playing on PC, please do not proceed with your order.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Platform</label>
+          <input type="text" class="form-input" value="PC" readonly style="opacity:0.6;cursor:not-allowed;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rockstar Username</label>
+          <input id="rockstarUser" type="text" class="form-input" placeholder="Your Rockstar Social Club username">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Discord Username</label>
+          <input id="discordUser" type="text" class="form-input" placeholder="e.g. username or @username">
+          <div class="form-hint">We'll DM you here to arrange account access securely.</div>
+        </div>
+        <div class="form-error" id="formError"></div>
+        <div class="order-summary" id="orderSummary"></div>
+        <button class="paypal-btn" onclick="submitOrder()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/></svg>
+          Pay with PayPal
+        </button>
+        <div class="modal-note">You'll be redirected to PayPal to complete your payment.</div>
+      </div>
+    </div>
+    <div id="checkoutStep2" style="display:none">
+      <div class="confirm-screen">
+        <div class="confirm-icon">✅</div>
+        <div class="confirm-title">Order Submitted!</div>
+        <p class="confirm-text">Your PayPal tab has opened. Once paid, we'll DM you on Discord at <strong id="confirmDiscord" style="color:var(--text)"></strong> within 1 hour to get your boost started.</p>
+        <div class="confirm-details">
+          <div class="confirm-details-title">Order Summary</div>
+          <div id="confirmItems"></div>
+          <div class="confirm-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">👤 Rockstar: <strong id="confirmRockstar"></strong></div>
+        </div>
+        <button class="btn-primary" onclick="closeCheckout()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PAYPAL = 'https://paypal.me/Arjan312/';
+  let cart = [];
+
+  // ── ADD TO CART ──
+  function addToCart(name, icon, price, btn) {
+    cart.push({ name, icon, price: parseFloat(price), id: Date.now() + Math.random() });
+    renderCart();
+    if (btn) {
+      btn.textContent = 'Added ✓';
+      btn.classList.add('added');
+      setTimeout(() => { btn.textContent = 'Add to Cart'; btn.classList.remove('added'); }, 1500);
+    }
+    const cnt = document.getElementById('cartCount');
+    cnt.classList.add('bump');
+    setTimeout(() => cnt.classList.remove('bump'), 200);
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(i => i.id !== id);
+    renderCart();
+  }
+
+  function renderCart() {
+    const count = cart.length;
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    document.getElementById('cartCount').textContent = count;
+    document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('cartCheckoutBtn').disabled = count === 0;
+    const itemsEl = document.getElementById('cartItems');
+    const emptyEl = document.getElementById('cartEmpty');
+    itemsEl.querySelectorAll('.cart-item').forEach(el => el.remove());
+    if (count === 0) {
+      emptyEl.style.display = 'block';
+    } else {
+      emptyEl.style.display = 'none';
+      cart.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'cart-item';
+        el.innerHTML = `
+          <div class="cart-item-icon">${item.icon}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>`;
+        itemsEl.appendChild(el);
+      });
+    }
+  }
+
+  // ── CART DRAWER ──
+  function toggleCart() {
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+    const isOpen = drawer.classList.contains('open');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+    document.body.style.overflow = isOpen ? '' : 'hidden';
+  }
+
+  // ── PAGE NAV ──
+  function showPage(page, cat) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if (el) el.classList.add('active');
+    const navEl = document.querySelector(`[data-page="${page}"]`);
+    if (navEl) navEl.classList.add('active');
+    if (cat) {
+      const catNavEl = document.querySelector(`[data-page="${cat}"]`);
+      if (catNavEl) { navEl && navEl.classList.remove('active'); catNavEl.classList.add('active'); }
+      filterCat(cat);
+    }
+    // Close cart drawer if open
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── CATEGORY FILTER ──
+  function filterCat(cat) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    const tab = document.getElementById('tab-' + cat);
+    if (tab) tab.classList.add('active');
+    document.querySelectorAll('#productsGrid .product-card').forEach(card => {
+      card.classList.toggle('hidden', cat !== 'all' && card.dataset.cat !== cat);
+    });
+  }
+
+  // ── CHECKOUT MODAL ──
+  function openCheckout() {
+    if (!cart.length) return;
+    document.getElementById('rockstarUser').value = '';
+    document.getElementById('discordUser').value = '';
+    document.getElementById('formError').style.display = 'none';
+    document.getElementById('checkoutStep1').style.display = 'block';
+    document.getElementById('checkoutStep2').style.display = 'none';
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    let html = cart.map(i => `<div class="order-row"><span>${i.icon} ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`).join('');
+    html += `<div class="order-total"><span>Total</span><span>$${total.toFixed(2)}</span></div>`;
+    document.getElementById('orderSummary').innerHTML = html;
+    document.getElementById('modalTitle').textContent = cart.length === 1 ? cart[0].name : cart.length + ' Services';
+    document.getElementById('checkoutModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCheckout() {
+    document.getElementById('checkoutModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function submitOrder() {
+    const rockstar = document.getElementById('rockstarUser').value.trim();
+    const discord = document.getElementById('discordUser').value.trim();
+    const errEl = document.getElementById('formError');
+    if (!rockstar) { errEl.textContent = 'Please enter your Rockstar username.'; errEl.style.display = 'block'; return; }
+    if (!discord) { errEl.textContent = 'Please enter your Discord username.'; errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    document.getElementById('confirmItems').innerHTML = cart.map(i => `<div class="confirm-row">${i.icon} ${i.name} — <strong>$${i.price.toFixed(2)}</strong></div>`).join('');
+    document.getElementById('confirmRockstar').textContent = rockstar;
+    document.getElementById('confirmDiscord').textContent = discord;
+    window.open(PAYPAL + total.toFixed(2), '_blank');
+    cart = [];
+    renderCart();
+    document.getElementById('checkoutStep1').style.display = 'none';
+    document.getElementById('checkoutStep2').style.display = 'block';
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('checkoutModal').addEventListener('click', function(e) {
+    if (e.target === this) closeCheckout();
+  });
+
+  // Set home as active on load
+  document.querySelector('[data-page="home"]').classList.add('active');
+</script>
+</body>
+</html>
